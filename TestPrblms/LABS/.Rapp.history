@@ -1,0 +1,28 @@
+load("/Users/niyati/Projects:Codes/PhD-Compute/R code/TestPrblms/LABS/instance_1.RData")
+in1 <- readRDS("/Users/niyati/Projects:Codes/PhD-Compute/R code/TestPrblms/LABS/instance_1.RData")
+in1
+load("/Users/niyati/Projects:Codes/PhD-Compute/R code/TestPrblms/LABS/instance_1.RData")
+num_instances <- 1#
+vd <- readRDS("/Users/niyati/Projects:Codes/PhD-Compute/R code/TestPrblms/LABS/instance_1.RData")
+vd
+#Extract data for each instance#
+for(i in 1:num_instances){#
+  prbocs_data[[i]] <- vd[[i]]$PRBOCS$prbocs_result$data#
+  prbocs_ga_data[[i]] <- vd[[i]]$PRBOCS_GA$prbocsga_result$data#
+  prbocs_vb[[i]] <- vd[[i]]$PRBOCS_VB$prbocs_vb_result$data#
+  prbocs_vb_ga[[i]] <- vd[[i]]$PRBOCS_VB_GA$prbocs_vb_ga_result$data #
+  bocs_ga[[i]] <- vd[[i]]$BOCS_GA$bocsga_result$data #
+  bocs_sa[[i]] <- vd[[i]]$BOCS_SA$bocssa_result$data#
+  bocs_sdp[[i]] <- vd[[i]]$BOCS_SDP$bocssdp_result$data#
+}#
+#
+summary_list <- list(#
+  PRBOCS = prbocs_data,#
+  PRBOCS_GA = prbocs_ga_data,#
+  PRBOCS_VB = prbocs_vb,#
+  PRBOCS_VB_GA = prbocs_vb_ga,#
+  BOCS_GA = bocs_ga,#
+  BOCS_SA = bocs_sa,#
+  BOCS_SDP = bocs_sdp#
+)
+vd$
