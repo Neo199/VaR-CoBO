@@ -76,32 +76,9 @@ run_simulation_instance <- function(instance_id, n_vars, evalBudget, n_init, ord
     # -------------------------------
     # Setup parallel backend
     # -------------------------------
-    ncores <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", unset="1"))   # will equal SLURM_CPUS_PER_TASK if exported properly
+    ncores <- parallel::detectCores()   # will equal SLURM_CPUS_PER_TASK if exported properly
     cl <- makeCluster(ncores)
     registerDoParallel(cl)
-
-    clusterEvalQ(cl, {
-	library(GA)
-	library(rstan)
-	library(rstanarm)
-	library(dplyr)
-	library(sparsevb)
-	source("~/sonic/sample_models.R")
-	source("~/sonic/Contamination.R")
-	source("~/sonic/thompson.R")
-	source("~/sonic/thompson_svb.R")
-	source("~/sonic/ordertheta_interaction.R")
-	source("~/sonic/sim_anneal.R")
-	source("~/sonic/semi_def_progm.R")
-	source("~/sonic/prbocs.R")
-	source("~/sonic/prbocs_vb.R")
-	source("~/sonic/prbocs_ga.R")
-	source("~/sonic/prbocs_vb_ga.R")
-	source("~/sonic/bocs_ga.R")
-	source("~/sonic/bocs_sa.R")
-	source("~/sonic/bocs_sdp.R")
-	NULL
-	})
 
     # List of methods to run
     method_list <- list(
@@ -123,20 +100,12 @@ run_simulation_instance <- function(instance_id, n_vars, evalBudget, n_init, ord
       }
     )
 
-    # Export needed objects from this function to workers
-
-    clusterExport(cl, varlist = c("data", "evalBudget", "n_init", "n_vars",
-                                  "xTrain", "xTrain_in", "theta_current",
-                                  "order", "seed", "method_list", "model",
-                                  "contamination_prob", "sample_models", "order_effects"),
-                envir = environment())
-
     # -------------------------------
     # Run methods in parallel
     # -------------------------------
     results <- foreach(method = names(method_list), .combine = "list",
                        .multicombine = TRUE, .inorder = TRUE,
-                       .packages = c("GA","rstan","rstanarm","dplyr", "sparsevb")) %dopar% {
+                       .packages = c("GA","rstan","rstanarm","dplyr")) %dopar% {
       start_time <- Sys.time()
       res <- method_list[[method]]()
       end_time <- Sys.time()

@@ -1,6 +1,6 @@
 # RUN PRBOCS-GA
 # SIMULATION STUDY
-# Function for PRBOCS-GA - MINIMISATION
+# Function for PRBOCS-GA
 
 
 prbocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
@@ -29,8 +29,7 @@ prbocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta
   global_scale<-(p0/(p-p0))/sqrt(n)
   prbocsga_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                       prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                      prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                      cores = 4)
+                                      prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   for (t in 1:n_iter) {
     print(paste("prbocsga_iteration_",t))
     
@@ -98,8 +97,7 @@ prbocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta
     global_scale<-(p0/(p-p0))/sqrt(n)
     prbocsga_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                         prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                        prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                        cores = 4)
+                                        prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
     }
   
   result <- list(solution = tail(prbocsga_data, n =1), data = prbocsga_data, 

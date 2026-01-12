@@ -65,21 +65,9 @@ Contamination <- function(x, runlength, seed) {
   }
 }
 
-
-# x <- c(1, 0, 1)  # Binary decision vector
-# runlength <- 1000
-# seed <- 42
-# result <- Contamination(x, runlength, seed)
-# 
-# cat("Cost (fn):", result$fn, "\n")
-# cat("Constraints:", result$constraint, "\n")
-# cat("Constraint Covariance Matrix:\n")
-# print(result$ConstraintCov)
-
-
 contamination_prob <- function(x, n_samples, seed) {
   # Declare gamma factor (Lagrange constants)
-  gamma <- 10
+  gamma <- .001
   
   # Find the total number of input samples
   num_inputs <- nrow(x)
@@ -98,17 +86,3 @@ contamination_prob <- function(x, n_samples, seed) {
   
   return(out)
 }
-
-# 
-# # Define input matrix (binary variables)
-# x <- matrix(c(0, 1, 1, 0, 1, 0), nrow = 3, byrow = TRUE)
-# 
-# # Parameters
-# n_samples <- 1000
-# seed <- 5
-# 
-# # Compute contamination probabilities
-# out <- contamination_prob(x, n_samples, seed)
-# 
-# print(out)
-# 

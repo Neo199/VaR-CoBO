@@ -1,5 +1,4 @@
 # Function to compute thompson sampling
-# this function is designed to be used with STAN mcmc
 thompson_sam <- function(x_current, bayesian_model, removed_columns, data, order){
   
   # browser()
