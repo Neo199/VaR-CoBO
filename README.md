@@ -6,3 +6,7 @@ Please install the github version of the sparsevb R package here. A few changes 
 Stan is required to run all the comparison approaches.
 All the other packages can be installed from CRAN.
 
+## Usage
+The user can use directly the test examples if they want. The minimisation and maximisation code function variants have been separated into two separate folders for ease of use.
+
+The main contribution function exists in the prbocs-vb.R file. 
