@@ -1,6 +1,6 @@
-# Function for PRBOCS-VB-TS-optim Minimisation
+# Function for PRBOCS-VB-TS-optim
 
-prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
+prbocs_vb_optim <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
   vb_data <- data[,-1]
   
   # Initialize a data frame to store iteration results
@@ -32,10 +32,9 @@ prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta
   )
   
   for (t in 1:n_iter) {
-    
-    print(paste("prbocsvb_iteration_",t))
+
     stat_model <- function(theta) {
-      thompson_sam_svb(theta, vb_model = vb_model, duplicate_cols, vb_data, order)
+      -thompson_sam_svb(theta, vb_model = vb_model, duplicate_cols, vb_data, order)
     }
     
     min_acq <- optim(theta_current, stat_model, method='L-BFGS-B', lower=1e-8, upper=0.99999)
@@ -57,6 +56,7 @@ prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta
     
     data_new <- data.frame(y = y_new, x_new_in)
     data <- rbind(data, data_new)
+    op_data <- data
     
     theta_current <- expected_val
     
@@ -86,7 +86,7 @@ prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta
       intercept = TRUE       # Include intercept in the model
     )
   }
-  result <- list(solution = tail(vb_data, n =1), data = data, 
+  result <- list(solution = tail(vb_data, n =1), data = op_data, 
                  model = vb_model) 
   return(result)
 }

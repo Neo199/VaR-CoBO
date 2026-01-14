@@ -28,7 +28,7 @@ bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
   global_scale<-(p0/(p-p0))/sqrt(n)
   bocsga_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                         prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                        prior_intercept = normal(0,1), iter = 1000, refresh = 0, cores = 4)
+                                        prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   # Generate a random binary vector
   x_current <-sample(c(0, 1), size = n_vars, replace = TRUE)
   
@@ -39,8 +39,7 @@ bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
     }
     
     ga_model <- function(x_current) {
-      f <- -(stat_model(x_current))
-      (f) # - penalty1 - penalty2)            # fitness function value
+      stat_model(x_current)        # fitness function value
     }
     
     GA <- ga(type = "binary", fitness = ga_model, nBits = n_vars, 
@@ -60,7 +59,7 @@ bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
     #Append new point to existing x_vals
     x_vals_updated <- rbind(xTrain, x_new)
     # Evaluate model objective at the new evaluation point
-    y_new <- model(x_new, seed)
+    y_new <- model(x_new)
     
     x_new <- matrix(x_new, nrow = 1, ncol = n_vars)
     x_new_in_comb <- order_effects(x_new, order)
@@ -92,7 +91,7 @@ bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
     
     bocsga_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                       prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                      prior_intercept = normal(0,1), iter = 1000, refresh = 0, cores = 4)
+                                      prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   }
   
   result <- list(solution = tail(bocsga_data, n =1), data = bocsga_data, 

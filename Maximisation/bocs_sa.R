@@ -28,8 +28,7 @@ bocs_sa <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
   global_scale<-(p0/(p-p0))/sqrt(n)
   bocssa_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                     prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                    prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                    cores = 4)
+                                    prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   
   # Generate a random binary vector
   x_current <-sample(c(0, 1), size = n_vars, replace = TRUE)
@@ -60,11 +59,11 @@ bocs_sa <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
     }
     
     # Evaluate model objective at the new evaluation point
-    # Find the index of the minimum objective value
-    min_idx <- which.min(SA_obj)
+    # Find the index of the maximum objective value
+    max_idx <- which.max(SA_obj)
     
     # Select the corresponding best model
-    x_new <- SA_model[min_idx, ]
+    x_new <- SA_model[max_idx, ]
     
     
     x_new <- matrix(x_new, nrow=1, ncol=n_vars)
@@ -107,8 +106,7 @@ bocs_sa <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
     
     bocssa_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                       prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                      prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                      cores = 4)
+                                      prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   }
   
   result <- list(solution = tail(bocssa_data, n =1), data = bocssa_data, 

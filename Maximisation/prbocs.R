@@ -36,7 +36,7 @@ prbocs_optim <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, th
     x_current <- rbinom(n = n_vars, size = 1, prob = theta_current)
   
     stat_model <- function(theta) {
-      thompson_sam(theta, bayesian_model = prbocs_bayesian_model, removed_columns, data, order)
+      -thompson_sam(theta, bayesian_model = prbocs_bayesian_model, removed_columns, data, order)
     }
   
     min_acq <- optim(theta_current, stat_model, method='L-BFGS-B', lower=1e-8, upper=0.99999999)

@@ -31,8 +31,7 @@ bocs_sdp <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order)
   global_scale<-(p0/(p-p0))/sqrt(n)
   bocssdp_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                      prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                     prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                     cores = 4)
+                                     prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   
   # Generate a random binary vector
   x_current <-sample(c(0, 1), size = n_vars, replace = TRUE)
@@ -50,7 +49,7 @@ bocs_sdp <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order)
     #Append new point to existing x_vals
     x_vals_updated <- rbind(xTrain, x_new)
     # Evaluate model objective at the new evaluation point
-    y_new <- model(x_new)
+    y_new <- model(x_new, seed)
     
     x_new <- matrix(x_new, nrow = 1, ncol = n_vars)
     x_new_in_comb <- order_effects(x_new, order)
@@ -83,8 +82,7 @@ bocs_sdp <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order)
     
     bocssdp_bayesian_model <- stan_glm(y ~ ., data = data_reduced, family = gaussian(), 
                                        prior=hs(global_scale=global_scale, slab_scale=slab_scale), 
-                                       prior_intercept = normal(0,1), iter = 1000, refresh = 0,
-                                       cores = 4)
+                                       prior_intercept = normal(0,1), iter = 1000, chains = 4, cores = 4, refresh = 0)
   }
   
   result <- list(solution = tail(bocssdp_data, n =1), data = bocssdp_data, 

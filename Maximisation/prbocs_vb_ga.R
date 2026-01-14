@@ -1,4 +1,4 @@
-# Function for PRBOCS-VB-GA Minimisation 
+# Function for PRBOCS-VB-TS
 
 prbocs_vb_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
   vb_ga_data <- data[,-1]
@@ -33,27 +33,13 @@ prbocs_vb_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, th
   
   for (t in 1:n_iter) {
     
-    print(paste("prbocsvbga_iteration_",t))
     stat_model <- function(theta) {
-      thompson_sam_svb(theta, vb_model = vb_ga_model, duplicate_cols, vb_ga_data, order)
+      -thompson_sam_svb(theta, vb_model = vb_ga_model, duplicate_cols, vb_ga_data, order)
     }
     
-    ga_model <- function(theta_current) {
-      f <- -(stat_model(theta_current))
-      (f) # - penalty1 - penalty2)            # fitness function value
-    }
+    min_acq <- optim(theta_current, stat_model, method='L-BFGS-B', lower=1e-8, upper=0.99999)
     
-    GA <- ga(
-      type = "real-valued",           # <— continuous GA
-      fitness = ga_model,
-      lower = rep(0, n_vars),         # lower bounds for θ
-      upper = rep(1, n_vars),         # upper bounds for θ
-      popSize = 100,
-      maxiter = 1000,
-      run = 10
-    )
-    
-    expected_val <- GA@solution
+    expected_val <- min_acq$par
     cat("expected_val", expected_val, "\n")
     x_new <- rbinom(length(expected_val), 1, expected_val)
     cat("New evaluation point", x_new, "\n")
@@ -70,6 +56,7 @@ prbocs_vb_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, th
     
     data_new <- data.frame(y = y_new, x_new_in)
     data <- rbind(data, data_new)
+    op_data <- data
     
     theta_current <- expected_val
     
@@ -99,7 +86,7 @@ prbocs_vb_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, th
       intercept = TRUE       # Include intercept in the model
     )
   }
-  result <- list(solution = tail(vb_ga_data, n =1), data = data, 
+  result <- list(solution = tail(vb_ga_data, n =1), data = op_data, 
                  model = vb_ga_model) 
   return(result)
 }
