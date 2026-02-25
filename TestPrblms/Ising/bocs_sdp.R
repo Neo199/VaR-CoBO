@@ -1,9 +1,10 @@
 # RUN BOCS-SDP
 # SIMULATION STUDY
 # Function for BOCS-SDP
+#For Ising
 
 
-bocs_sdp <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
+bocs_sdp <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order, theta_P){
   lambda <- .2 #For SDP
   
   # Initialize a data frame to store iteration results

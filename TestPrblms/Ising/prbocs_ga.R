@@ -1,9 +1,10 @@
 # RUN PRBOCS-GA
 # SIMULATION STUDY
 # Function for PRBOCS-GA
+# For Ising
 
 
-prbocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
+prbocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order, theta_P){
   # Initialize a data frame to store iteration results
   prbocsga_result <- matrix(0, evalBudget, n_vars)
   

@@ -1,6 +1,7 @@
 # Function for PRBOCS-VB-TS-optim Minimisation
+# For Ising , theta_P
 
-prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
+prbocs_vb <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order, theta_P){
   vb_data <- data[,-1]
   
   # Initialize a data frame to store iteration results

@@ -1,8 +1,9 @@
 # RUN BOCS-GA
 # SIMULATION STUDY
 # Function for BOCS-GA
+# For Ising
  
-bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order){
+bocs_ga <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, order, theta_P){
   # Initialize a data frame to store iteration results
   bocsga_result <- matrix(0, evalBudget, n_vars)
   

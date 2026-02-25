@@ -1,7 +1,8 @@
 # SIMULATION STUDY
 # Function for PRBOCS-optim
+# For ISING
 
-prbocs_optim <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order){
+prbocs_optim <- function(data, evalBudget, n_iter, n_vars, xTrain, xTrain_in, theta_current, order, theta_P){
   # Initialize a data frame to store iteration results
   prbocs_result <- matrix(0, evalBudget, n_vars)
 

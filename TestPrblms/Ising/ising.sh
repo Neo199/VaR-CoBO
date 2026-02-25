@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name="labs"
+#SBATCH --job-name="ising"
 
 # specify number of tasks/cores per node required
 #SBATCH --array=1-10              # 20 tasks (one per instance)
